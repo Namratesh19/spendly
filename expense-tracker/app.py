@@ -1,7 +1,9 @@
-from flask import Flask, render_template
-from database.db import init_db, seed_db
+from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.security import check_password_hash, generate_password_hash
+from database.db import init_db, seed_db, get_user_by_email, create_user
 
 app = Flask(__name__)
+app.secret_key = "spendly-secret-key-change-this-in-production"
 
 
 # ------------------------------------------------------------------ #
@@ -13,13 +15,36 @@ def landing():
     return render_template("landing.html")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if not name or not email or not password:
+            return render_template("register.html", error="All fields are required")
+
+        if get_user_by_email(email):
+            return render_template("register.html", error="Email already registered")
+
+        hashed_pw = generate_password_hash(password)
+        create_user(name, email, hashed_pw)
+        return redirect(url_for("login"))
+
     return render_template("register.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        user = get_user_by_email(email)
+        if user and check_password_hash(user["password_hash"], password):
+            session["user_id"] = user["id"]
+            return redirect(url_for("profile"))
+        return render_template("login.html", error="Invalid email or password")
     return render_template("login.html")
 
 
@@ -45,7 +70,8 @@ with app.app_context():
 
 @app.route("/logout")
 def logout():
-    return "Logout — coming in Step 3"
+    session.clear()
+    return redirect(url_for("landing"))
 
 
 @app.route("/profile")
