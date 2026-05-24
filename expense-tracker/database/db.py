@@ -2,7 +2,7 @@ import sqlite3
 import os
 from werkzeug.security import generate_password_hash
 
-DB_PATH = "spendly.db"
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "spendly.db")
 
 def get_db():
     """
@@ -79,5 +79,32 @@ def seed_db():
                 "INSERT INTO expenses (user_id, amount, category, date, description) VALUES (?, ?, ?, ?, ?)",
                 expenses
             )
+    finally:
+        conn.close()
+
+def get_user_by_email(email):
+    """
+    Retrieves a user record from the database based on their email.
+    Returns the user row if found, otherwise None.
+    """
+    conn = get_db()
+    try:
+        return conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+    finally:
+        conn.close()
+
+def create_user(name, email, password_hash):
+    """
+    Creates a new user in the database.
+    Returns the new user's ID.
+    """
+    conn = get_db()
+    try:
+        with conn:
+            cursor = conn.execute(
+                "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+                (name, email, password_hash)
+            )
+            return cursor.lastrowid
     finally:
         conn.close()
