@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from database.db import init_db, seed_db, get_user_by_email, create_user
+from database.queries import get_category_breakdown, get_summary_stats, get_recent_transactions, get_user_by_id
 
 app = Flask(__name__)
 app.secret_key = "spendly-secret-key-change-this-in-production"
@@ -79,32 +80,39 @@ def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
+    user_id = session["user_id"]
+    user_data = get_user_by_id(user_id)
+
+    if not user_data:
+        return redirect(url_for("login"))
+
     user = {
-        "name": "Demo User",
-        "email": "demo@spendly.com",
-        "joined": "May 2026",
-        "initials": "DU"
+        "name": user_data["name"],
+        "email": user_data["email"],
+        "joined": user_data["member_since"],
+        "initials": user_data["name"][0:2].upper() if user_data["name"] else "U"
     }
 
+    stats_data = get_summary_stats(user_id)
     stats = {
-        "total_spent": "₹18,240",
-        "transactions": 34,
-        "top_category": "Food"
+        "total_spent": f"₹{stats_data['total_spent']:,.2f}",
+        "transactions": stats_data["transaction_count"],
+        "top_category": stats_data["top_category"]
     }
 
     transactions = [
-        {"date": "2026-05-20", "desc": "Grocery Store", "cat": "Food", "amt": "₹1,200.00"},
-        {"date": "2026-05-18", "desc": "Uber Ride", "cat": "Transport", "amt": "₹450.00"},
-        {"date": "2026-05-15", "desc": "Netflix Subscription", "cat": "Entertainment", "amt": "₹499.00"},
-        {"date": "2026-05-12", "desc": "Starbucks Coffee", "cat": "Food", "amt": "₹350.00"},
-        {"date": "2026-05-10", "desc": "Gym Membership", "cat": "Health", "amt": "₹2,000.00"},
+        {
+            "date": tx["date"],
+            "desc": tx["description"],
+            "cat": tx["category"],
+            "amt": f"₹{tx['amount']:,.2f}"
+        }
+        for tx in get_recent_transactions(user_id)
     ]
 
     categories = [
-        {"name": "Food", "spent": "₹5,400", "pct": 30},
-        {"name": "Transport", "spent": "₹3,200", "pct": 18},
-        {"name": "Entertainment", "spent": "₹4,100", "pct": 22},
-        {"name": "Health", "spent": "₹5,540", "pct": 30},
+        {"name": cat["name"], "spent": f"₹{cat['amount']:,.2f}", "pct": cat["pct"]}
+        for cat in get_category_breakdown(user_id)
     ]
 
     return render_template(
