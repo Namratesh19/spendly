@@ -76,7 +76,44 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    user = {
+        "name": "Demo User",
+        "email": "demo@spendly.com",
+        "joined": "May 2026",
+        "initials": "DU"
+    }
+
+    stats = {
+        "total_spent": "₹18,240",
+        "transactions": 34,
+        "top_category": "Food"
+    }
+
+    transactions = [
+        {"date": "2026-05-20", "desc": "Grocery Store", "cat": "Food", "amt": "₹1,200.00"},
+        {"date": "2026-05-18", "desc": "Uber Ride", "cat": "Transport", "amt": "₹450.00"},
+        {"date": "2026-05-15", "desc": "Netflix Subscription", "cat": "Entertainment", "amt": "₹499.00"},
+        {"date": "2026-05-12", "desc": "Starbucks Coffee", "cat": "Food", "amt": "₹350.00"},
+        {"date": "2026-05-10", "desc": "Gym Membership", "cat": "Health", "amt": "₹2,000.00"},
+    ]
+
+    categories = [
+        {"name": "Food", "spent": "₹5,400", "pct": 30},
+        {"name": "Transport", "spent": "₹3,200", "pct": 18},
+        {"name": "Entertainment", "spent": "₹4,100", "pct": 22},
+        {"name": "Health", "spent": "₹5,540", "pct": 30},
+    ]
+
+    return render_template(
+        "profile.html",
+        user=user,
+        stats=stats,
+        transactions=transactions,
+        categories=categories
+    )
 
 
 @app.route("/expenses/add")

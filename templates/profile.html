@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+
+        <div class="profile-header">
+            <h1 class="auth-title">My Profile</h1>
+            <p class="auth-subtitle">Your spending overview and account details</p>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="auth-card user-card">
+            <div class="avatar">
+                {{ user.initials }}
+            </div>
+            <div class="user-details">
+                <h2>{{ user.name }}</h2>
+                <p>{{ user.email }}</p>
+                <div class="user-meta">
+                    <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                    Joined {{ user.joined }}
+                </div>
+            </div>
+            <a href="#" class="btn-ghost" style="margin-left: auto;">Settings</a>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stats-label">
+                    <i data-lucide="wallet" style="width: 16px; height: 16px;"></i>
+                    Total Spent
+                </div>
+                <div class="stats-value">{{ stats.total_spent }}</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                    Transactions
+                </div>
+                <div class="stats-value">{{ stats.transactions }}</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">
+                    <i data-lucide="tag" style="width: 16px; height: 16px;"></i>
+                    Top Category
+                </div>
+                <div class="stats-value">{{ stats.top_category }}</div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="auth-card tx-card">
+            <div class="auth-header" style="text-align: left; margin-bottom: 1.5rem;">
+                <h3 class="auth-title" style="font-size: 1.25rem;">Recent Transactions</h3>
+            </div>
+            <table class="tx-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td>{{ tx.date }}</td>
+                        <td>{{ tx.desc }}</td>
+                        <td>
+                            <span class="category-badge badge-{{ tx.cat.lower() }}">
+                                {{ tx.cat }}
+                            </span>
+                        </td>
+                        <td class="tx-amount">{{ tx.amt }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="auth-card breakdown-card">
+            <div class="auth-header" style="text-align: left; margin-bottom: 1.5rem;">
+                <h3 class="auth-title" style="font-size: 1.25rem;">Category Breakdown</h3>
+            </div>
+            {% for cat in categories %}
+            <div class="category-row">
+                <div class="category-info">
+                    <span>{{ cat.name }}</span>
+                    <span>{{ cat.spent }}</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: {{ cat.pct }}%;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+{% endblock %}

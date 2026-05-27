@@ -1,0 +1,171 @@
+/* static/css/profile.css */
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-header .auth-title {
+    margin-bottom: 0.5rem;
+}
+
+.profile-header .auth-subtitle {
+    color: var(--ink-muted);
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    background: var(--accent);
+    color: var(--paper);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-details h2 {
+    margin: 0 0 0.25rem 0;
+    color: var(--ink);
+}
+
+.user-details p {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+}
+
+.user-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stats-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stats-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.tx-card {
+    margin-bottom: 2rem;
+}
+
+.tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.tx-table th {
+    text-align: left;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+}
+
+.tx-table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+}
+
+.tx-table tr:hover {
+    background: var(--paper-warm);
+}
+
+.tx-amount {
+    text-align: right;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.category-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-food { background: var(--accent-light); color: var(--accent); }
+.badge-transport { background: var(--accent-2-light); color: var(--accent-2); }
+.badge-entertainment { background: var(--border); color: var(--ink-soft); }
+.badge-health { background: var(--accent-light); color: var(--accent); }
+
+.breakdown-card {
+    margin-bottom: 2rem;
+}
+
+.category-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.category-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.progress-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+}
