@@ -31,6 +31,24 @@
             <a href="#" class="btn-ghost" style="margin-left: auto;">Settings</a>
         </div>
 
+        <!-- Date Filter -->
+        <div class="auth-card filter-card" style="margin-bottom: 1.5rem;">
+            <form method="GET" action="{{ url_for('profile') }}" class="filter-form" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                <div class="filter-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="start_date" style="font-size: 0.875rem; color: var(--text-muted);">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" value="{{ start_date }}" style="padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main);">
+                </div>
+                <div class="filter-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="end_date" style="font-size: 0.875rem; color: var(--text-muted);">End Date</label>
+                    <input type="date" id="end_date" name="end_date" value="{{ end_date }}" style="padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main);">
+                </div>
+                <div class="filter-actions" style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn-primary" style="padding: 0.5rem 1rem; cursor: pointer;">Filter</button>
+                    <a href="{{ url_for('profile') }}" class="btn-ghost" style="padding: 0.5rem 1rem; text-decoration: none; font-size: 0.875rem;">Clear</a>
+                </div>
+            </form>
+        </div>
+
         <!-- Summary Stats -->
         <div class="stats-grid">
             <div class="stats-card">
