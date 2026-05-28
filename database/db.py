@@ -8,7 +8,12 @@ def get_db():
     """
     Opens a connection to the SQLite database and configures it.
     """
-    conn = sqlite3.connect(DB_PATH)
+    from flask import current_app
+
+    # Use the database path from app config if available, otherwise fall back to default
+    db_path = current_app.config.get('DATABASE', DB_PATH)
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn

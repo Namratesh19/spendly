@@ -86,6 +86,10 @@ def profile():
     if not user_data:
         return redirect(url_for("login"))
 
+    # Get date filters from request arguments
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
     user = {
         "name": user_data["name"],
         "email": user_data["email"],
@@ -93,7 +97,7 @@ def profile():
         "initials": user_data["name"][0:2].upper() if user_data["name"] else "U"
     }
 
-    stats_data = get_summary_stats(user_id)
+    stats_data = get_summary_stats(user_id, start_date, end_date)
     stats = {
         "total_spent": f"₹{stats_data['total_spent']:,.2f}",
         "transactions": stats_data["transaction_count"],
@@ -107,12 +111,12 @@ def profile():
             "cat": tx["category"],
             "amt": f"₹{tx['amount']:,.2f}"
         }
-        for tx in get_recent_transactions(user_id)
+        for tx in get_recent_transactions(user_id, start_date=start_date, end_date=end_date)
     ]
 
     categories = [
         {"name": cat["name"], "spent": f"₹{cat['amount']:,.2f}", "pct": cat["pct"]}
-        for cat in get_category_breakdown(user_id)
+        for cat in get_category_breakdown(user_id, start_date, end_date)
     ]
 
     return render_template(
@@ -120,7 +124,9 @@ def profile():
         user=user,
         stats=stats,
         transactions=transactions,
-        categories=categories
+        categories=categories,
+        start_date=start_date,
+        end_date=end_date
     )
 
 
